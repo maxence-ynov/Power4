@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connect Four</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <h1>Connect Four</h1>
+    <div id="game-board">
+        {{range .Board}}
+            <div class="column">
+                {{range .}}
+                    <div class="cell {{if eq . 1}}player1{{else if eq . 2}}player2{{end}}"></div>
+                {{end}}
+            </div>
+        {{end}}
+    </div>
+    <form action="/play" method="post">
+        <label for="column">Choose a column:</label>
+        <select name="column" id="column">
+            {{range seq 0 .Columns}}
+                <option value="{{.}}">{{.}}</option>
+            {{end}}
+        </select>
+        <button type="submit">Play</button>
+    </form>
+</body>
+</html>
+<body>
+    <h1>Connect Four</h1>
+    {{if .Winner}}
+        <h2>Player {{.Winner}} wins!</h2>
+    {{else if .Draw}}
+        <h2>Draw!</h2>
+    {{else}}
+        <h2>Player {{.Turn}}'s turn</h2>
+    {{end}}
+    <div id="game-board">
+        {{range .Board}}
+            <div class="column">
+                {{range .}}
+                    <div class="cell {{if eq . 1}}player1{{else if eq . 2}}player2{{end}}"></div>
+                {{end}}
+            </div>
+        {{end}}
+    </div>
+    <!-- ...le reste du code... -->
+</body>
+<body>
+    <h1>Connect Four</h1>
+    {{if .Winner}}
+        <h2>Player {{.Winner}} wins!</h2>
+    {{else if .Draw}}
+        <h2>Draw!</h2>
+    {{else}}
+        <h2>Player {{.Turn}}'s turn</h2>
+    {{end}}
+    <!-- ...le reste du code... -->
+</body>
+{{if .Winner}}
+    <h2>Player {{.Winner}} wins!</h2>
+{{else if .Draw}}
+    <h2>Draw!</h2>
+{{else}}
+    <h2>Player {{.Turn}}'s turn</h2>
+{{end}}
+{{if or .Winner .Draw}}
+    <form action="/reset" method="post">
+        <button type="submit">Rematch</button>
+    </form>
+{{end}}

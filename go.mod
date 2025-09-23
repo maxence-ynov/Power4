@@ -1,3 +1,7 @@
-module power
+module connect-four-web
 
-go 1.25.0
+go 1.21
+
+require (
+    github.com/gorilla/mux v1.25.1
+)
