@@ -6,39 +6,40 @@ body {
 }
 
 /* Titre */
-h2, h3 {
+h1, h2 {
     margin: 10px;
 }
 
 /* Tableau du jeu */
-table {
-    border-collapse: collapse;
+#game-board {
+    display: flex;
+    justify-content: center;
     margin: 20px auto;
 }
 
-/* Cellules */
-td {
-    width: 60px;
-    height: 60px;
-    border: 2px solid #333;
-    text-align: center;
-    vertical-align: middle;
+/* Colonnes */
+.column {
+    display: flex;
+    flex-direction: column;
+    margin: 0 2px;
 }
 
-/* Jetons */
+/* Cellules */
 .cell {
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    margin: auto;
+    margin: 2px;
+    background: white;
+    border: 1px solid #333;
 }
 
 /* Couleurs des joueurs */
-.p1 {
+.player1 {
     background: red;
 }
 
-.p2 {
+.player2 {
     background: yellow;
 }
 
@@ -48,4 +49,5 @@ button {
     height: 30px;
     font-size: 16px;
     cursor: pointer;
+    margin-top: 10px;
 }

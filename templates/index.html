@@ -8,66 +8,37 @@
 </head>
 <body>
     <h1>Connect Four</h1>
+    {{if .Winner}}
+        <h2>Player {{.Winner}} wins!</h2>
+    {{else if .Draw}}
+        <h2>Draw!</h2>
+    {{else}}
+        <h2>Player {{.Turn}}'s turn</h2>
+    {{end}}
     <div id="game-board">
-        {{range .Board}}
+        {{range $colIndex, $column := .Board}}
             <div class="column">
-                {{range .}}
-                    <div class="cell {{if eq . 1}}player1{{else if eq . 2}}player2{{end}}"></div>
+                {{range $rowIndex, $cell := $column}}
+                    <div class="cell {{if eq $cell 1}}player1{{else if eq $cell 2}}player2{{end}}"></div>
                 {{end}}
             </div>
         {{end}}
     </div>
+    {{if not (or .Winner .Draw) }}
     <form action="/play" method="post">
         <label for="column">Choose a column:</label>
         <select name="column" id="column">
-            {{range seq 0 .Columns}}
+            {{range seq 0 (sub .Columns 1)}}
                 <option value="{{.}}">{{.}}</option>
             {{end}}
         </select>
         <button type="submit">Play</button>
     </form>
-</body>
-</html>
-<body>
-    <h1>Connect Four</h1>
-    {{if .Winner}}
-        <h2>Player {{.Winner}} wins!</h2>
-    {{else if .Draw}}
-        <h2>Draw!</h2>
-    {{else}}
-        <h2>Player {{.Turn}}'s turn</h2>
     {{end}}
-    <div id="game-board">
-        {{range .Board}}
-            <div class="column">
-                {{range .}}
-                    <div class="cell {{if eq . 1}}player1{{else if eq . 2}}player2{{end}}"></div>
-                {{end}}
-            </div>
-        {{end}}
-    </div>
-    <!-- ...le reste du code... -->
-</body>
-<body>
-    <h1>Connect Four</h1>
-    {{if .Winner}}
-        <h2>Player {{.Winner}} wins!</h2>
-    {{else if .Draw}}
-        <h2>Draw!</h2>
-    {{else}}
-        <h2>Player {{.Turn}}'s turn</h2>
-    {{end}}
-    <!-- ...le reste du code... -->
-</body>
-{{if .Winner}}
-    <h2>Player {{.Winner}} wins!</h2>
-{{else if .Draw}}
-    <h2>Draw!</h2>
-{{else}}
-    <h2>Player {{.Turn}}'s turn</h2>
-{{end}}
-{{if or .Winner .Draw}}
+    {{if or .Winner .Draw}}
     <form action="/reset" method="post">
         <button type="submit">Rematch</button>
     </form>
-{{end}}
+    {{end}}
+</body>
+</html>

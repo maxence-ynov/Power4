@@ -9,16 +9,27 @@ import (
 var game = NewGame()
 
 // GET /
-func homeHandler(w http.ResponseWriter, r *http.Request) {
+func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	tmpl := template.Must(template.New("index.html").
-		Funcs(template.FuncMap{"seq": seq}).
+		Funcs(template.FuncMap{
+			"seq": func(start, end int) []int {
+				s := make([]int, end-start+1)
+				for i := range s {
+					s[i] = start + i
+				}
+				return s
+			},
+			"eq":  func(a, b int) bool { return a == b },
+			"sub": func(a, b int) int { return a - b },
+		}).
 		ParseFiles("templates/index.html"))
-
-	tmpl.Execute(w, game)
+	if err := tmpl.Execute(w, game); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 }
 
 // POST /play
-func playHandler(w http.ResponseWriter, r *http.Request) {
+func PlayHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
 		colStr := r.FormValue("column")
 		col, err := strconv.Atoi(colStr)
@@ -29,23 +40,10 @@ func playHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
-// Generates a sequence of integers from start to end inclusive
-func seq(start, end int) []int {
-	s := make([]int, end-start+1)
-	for i := range s {
-		s[i] = start + i
-	}
-	return s
-}
-
-// ...existing code...
-
 // POST /reset
-func resetHandler(w http.ResponseWriter, r *http.Request) {
+func ResetHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
 		game = NewGame()
 	}
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
-
-// ...existing code...
