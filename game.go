@@ -1,57 +1,98 @@
 package main
 
 type Game struct {
-	Board   [][]int // 0 = empty, 1 = player1, 2 = player2
-	Rows    int
-	Columns int
-	Turn    int // 1 or 2
-	Winner  int // 0 = none, 1 or 2
-	Draw    bool
+	Board          [][]int
+	Rows           int
+	Columns        int
+	Turn           int
+	Winner         int
+	Draw           bool
+	GravityInverse bool
+	TurnCount      int
+	Player1Name    string
+	Player2Name    string
+	Level          string
 }
 
-func NewGame() *Game {
-	rows, cols := 6, 7
+func NewGame(level string, player1Name, player2Name string) *Game {
+	var rows, cols int
+	switch level {
+	case "easy":
+		rows, cols = 6, 7
+	case "normal":
+		rows, cols = 6, 9
+	case "hard":
+		rows, cols = 7, 8
+	default:
+		rows, cols = 6, 7
+	}
+
 	board := make([][]int, cols)
 	for i := range board {
 		board[i] = make([]int, rows)
 	}
+
 	return &Game{
-		Board:   board,
-		Rows:    rows,
-		Columns: cols,
-		Turn:    1,
-		Winner:  0,
-		Draw:    false,
+		Board:       board,
+		Rows:        rows,
+		Columns:     cols,
+		Turn:        1,
+		Winner:      0,
+		Draw:        false,
+		TurnCount:   0,
+		Player1Name: player1Name,
+		Player2Name: player2Name,
+		Level:       level,
 	}
 }
 
-// Play places a token in the chosen column
 func (g *Game) Play(col int) {
 	if col < 0 || col >= g.Columns || g.Winner != 0 || g.Draw {
 		return
 	}
-	// Find the lowest empty cell in the column
-	for row := g.Rows - 1; row >= 0; row-- {
-		if g.Board[col][row] == 0 {
-			g.Board[col][row] = g.Turn
-			if g.checkWin(col, row) {
-				g.Winner = g.Turn
-			} else if g.checkDraw() {
-				g.Draw = true
-			} else {
-				g.Turn = 3 - g.Turn // Switch player
+
+	if g.TurnCount%5 == 0 {
+		g.GravityInverse = !g.GravityInverse
+	}
+	g.TurnCount++
+
+	var row int
+	if g.GravityInverse {
+		for r := 0; r < g.Rows; r++ {
+			if g.Board[col][r] == 0 {
+				g.Board[col][r] = g.Turn
+				row = r
+				break
 			}
-			break
 		}
+	} else {
+		for r := g.Rows - 1; r >= 0; r-- {
+			if g.Board[col][r] == 0 {
+				g.Board[col][r] = g.Turn
+				row = r
+				break
+			}
+		}
+	}
+
+	if g.checkWin(col, row) {
+		g.Winner = g.Turn
+	} else if g.checkDraw() {
+		g.Draw = true
+	} else {
+		g.Turn = 3 - g.Turn
 	}
 }
 
-// Check for win condition
 func (g *Game) checkWin(col, row int) bool {
 	player := g.Board[col][row]
 	directions := [][2]int{
-		{0, 1}, {1, 0}, {1, 1}, {1, -1},
+		{0, 1},  // Horizontal
+		{1, 0},  // Vertical
+		{1, 1},  // Diagonale descendante
+		{1, -1}, // Diagonale montante
 	}
+
 	for _, d := range directions {
 		count := 1
 		for i := 1; i < 4; i++ {
@@ -75,7 +116,6 @@ func (g *Game) checkWin(col, row int) bool {
 	return false
 }
 
-// Check for draw
 func (g *Game) checkDraw() bool {
 	for col := 0; col < g.Columns; col++ {
 		for row := 0; row < g.Rows; row++ {

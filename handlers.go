@@ -6,10 +6,14 @@ import (
 	"strconv"
 )
 
-var game = NewGame()
+var game *Game
 
-// GET /
-func HomeHandler(w http.ResponseWriter, r *http.Request) {
+func homeHandler(w http.ResponseWriter, r *http.Request) {
+	if game == nil {
+		http.Redirect(w, r, "/start", http.StatusSeeOther)
+		return
+	}
+
 	tmpl := template.Must(template.New("index.html").
 		Funcs(template.FuncMap{
 			"seq": func(start, end int) []int {
@@ -23,27 +27,43 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 			"sub": func(a, b int) int { return a - b },
 		}).
 		ParseFiles("templates/index.html"))
+
 	if err := tmpl.Execute(w, game); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
 
-// POST /play
-func PlayHandler(w http.ResponseWriter, r *http.Request) {
+func startHandler(w http.ResponseWriter, r *http.Request) {
+	tmpl := template.Must(template.ParseFiles("templates/start.html"))
+	if err := tmpl.Execute(w, nil); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+}
+
+func startPostHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method == http.MethodPost {
+		player1 := r.FormValue("player1")
+		player2 := r.FormValue("player2")
+		level := r.FormValue("level")
+		game = NewGame(level, player1, player2)
+	}
+	http.Redirect(w, r, "/", http.StatusSeeOther)
+}
+
+func playHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
 		colStr := r.FormValue("column")
 		col, err := strconv.Atoi(colStr)
-		if err == nil {
+		if err == nil && game != nil {
 			game.Play(col)
 		}
 	}
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
-// POST /reset
-func ResetHandler(w http.ResponseWriter, r *http.Request) {
+func resetHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
-		game = NewGame()
+		game = nil
 	}
-	http.Redirect(w, r, "/", http.StatusSeeOther)
+	http.Redirect(w, r, "/start", http.StatusSeeOther)
 }
