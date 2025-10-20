@@ -51,16 +51,10 @@ func (g *Game) Play(col int) {
 		return
 	}
 
-	if g.TurnCount%5 == 0 {
-		g.GravityInverse = !g.GravityInverse
-	}
-	g.TurnCount++
-
-	var row int
+	row := -1
 	if g.GravityInverse {
 		for r := 0; r < g.Rows; r++ {
 			if g.Board[col][r] == 0 {
-				g.Board[col][r] = g.Turn
 				row = r
 				break
 			}
@@ -68,20 +62,78 @@ func (g *Game) Play(col int) {
 	} else {
 		for r := g.Rows - 1; r >= 0; r-- {
 			if g.Board[col][r] == 0 {
-				g.Board[col][r] = g.Turn
 				row = r
 				break
 			}
 		}
 	}
 
+	if row == -1 {
+		return
+	}
+
+	g.Board[col][row] = g.Turn
+	g.TurnCount++
+
+	row = g.applyGravity(col, row, g.GravityInverse)
+
+	var gravityToggled bool
+	if g.TurnCount%5 == 0 {
+		g.GravityInverse = !g.GravityInverse
+		row = g.applyGravity(col, row, g.GravityInverse)
+		gravityToggled = true
+	}
+
 	if g.checkWin(col, row) {
 		g.Winner = g.Turn
-	} else if g.checkDraw() {
-		g.Draw = true
-	} else {
-		g.Turn = 3 - g.Turn
+		return
 	}
+
+	if gravityToggled {
+		if winner := g.scanForWinner(); winner != 0 {
+			g.Winner = winner
+			return
+		}
+	}
+
+	if g.checkDraw() {
+		g.Draw = true
+		return
+	}
+
+	g.Turn = 3 - g.Turn
+}
+
+func (g *Game) applyGravity(lastCol, lastRow int, gravityInverse bool) int {
+	type cell struct {
+		value int
+		row   int
+	}
+
+	for c := 0; c < g.Columns; c++ {
+		stack := make([]cell, 0, g.Rows)
+		for r := 0; r < g.Rows; r++ {
+			if g.Board[c][r] != 0 {
+				stack = append(stack, cell{value: g.Board[c][r], row: r})
+				g.Board[c][r] = 0
+			}
+		}
+
+		for i, entry := range stack {
+			var newRow int
+			if gravityInverse {
+				newRow = i
+			} else {
+				newRow = g.Rows - 1 - i
+			}
+			g.Board[c][newRow] = entry.value
+			if c == lastCol && entry.row == lastRow {
+				lastRow = newRow
+			}
+		}
+	}
+
+	return lastRow
 }
 
 func (g *Game) checkWin(col, row int) bool {
@@ -125,4 +177,18 @@ func (g *Game) checkDraw() bool {
 		}
 	}
 	return true
+}
+
+func (g *Game) scanForWinner() int {
+	for col := 0; col < g.Columns; col++ {
+		for row := 0; row < g.Rows; row++ {
+			if g.Board[col][row] == 0 {
+				continue
+			}
+			if g.checkWin(col, row) {
+				return g.Board[col][row]
+			}
+		}
+	}
+	return 0
 }

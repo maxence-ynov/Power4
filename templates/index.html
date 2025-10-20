@@ -1,58 +1,70 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Power 4 - {{if .Winner}}Victory!{{else if .Draw}}Draw!{{else}}Game{{end}}</title>
-    <link rel="stylesheet" href="/static/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Power 4</title>
+  <link rel="stylesheet" href="/static/style.css" />
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Power 4</h1>
-            <div class="game-info">
-                {{if .Winner}}
-                    <h2 class="victory">{{.Player1Name}} vs {{.Player2Name}} → <span>Player {{.Winner}} wins!</span></h2>
-                {{else if .Draw}}
-                    <h2 class="draw">Match nul !</h2>
-                {{else}}
-                    <h2 class="turn-indicator">Tour de {{if eq .Turn 1}}{{.Player1Name}}{{else}}{{.Player2Name}}{{end}}</h2>
-                {{end}}
-                <p class="level-info">Niveau : <span>{{.Level}}</span></p>
-                
+  <h1>Power 4</h1>
+
+  <section class="card status">
+    {{ if .Winner }}
+      <div class="turn {{if eq .Winner 1}}p1{{else}}p2{{end}}">
+        Victoire de
+        <span>{{if eq .Winner 1}}{{.Player1Name}}{{else}}{{.Player2Name}}{{end}}</span>
+        !
+      </div>
+    {{ else if .Draw }}
+      <div class="turn">Match nul</div>
+    {{ else }}
+      <div class="turn {{if eq .Turn 1}}p1{{else}}p2{{end}}">
+        C'est au tour de
+        <span>{{if eq .Turn 1}}{{.Player1Name}}{{else}}{{.Player2Name}}{{end}}</span>
+      </div>
+      <div class="badges" aria-hidden="true">
+        <div class="badge"><span class="dot p1"></span> {{.Player1Name}}</div>
+        <span class="subtle">vs</span>
+        <div class="badge"><span class="dot p2"></span> {{.Player2Name}}</div>
+      </div>
+      <p class="subtle" style="margin-top:.5rem">
+        Niveau : <strong>{{.Level}}</strong> &mdash; Gravite :
+        <strong>{{if .GravityInverse}}Inversee{{else}}Normale{{end}}</strong>
+      </p>
+    {{ end }}
+  </section>
+
+  <section class="board-wrap card-lg">
+    <form action="/play" method="post" novalidate>
+      <div class="board" style="grid-template-columns: repeat({{.Columns}}, 1fr);">
+        {{range $col := seq 0 (sub $.Columns 1)}}
+          <button class="col" type="submit" name="column" value="{{$col}}" aria-label="Jouer dans la colonne {{$col}}">
+            <span class="hover-indicator">&darr;</span>
+            <div class="column-grid" aria-hidden="true">
+              {{range $row := seq 0 (sub $.Rows 1)}}
+                {{ $cell := index (index $.Board $col) $row }}
+                <div class="cell {{if eq $cell 1}}player1{{else if eq $cell 2}}player2{{end}}"></div>
+              {{end}}
             </div>
-        </header>
+          </button>
+        {{end}}
+      </div>
+    </form>
+  </section>
 
-        <main>
-            <div class="game-board">
-                {{range $colIndex, $column := .Board}}
-                    <div class="column">
-                        {{range $rowIndex, $cell := $column}}
-                            <div class="cell {{if eq $cell 1}}player1{{else if eq $cell 2}}player2{{end}}"></div>
-                        {{end}}
-                    </div>
-                {{end}}
-            </div>
-        </main>
+  <div class="actions">
+    <form action="/reset" method="post">
+      <button type="submit" class="btn btn-danger">Recommencer</button>
+    </form>
+    <a class="btn btn-secondary" href="/start">Menu</a>
+  </div>
 
-        <footer>
-            {{if not (or .Winner .Draw) }}
-            <form action="/play" method="post" class="play-form">
-                <label for="column">Choisir une colonne :</label>
-                <select name="column" id="column" class="column-select">
-                    {{range seq 0 (sub .Columns 1)}}
-                        <option value="{{.}}">{{.}}</option>
-                    {{end}}
-                </select>
-                <button type="submit" class="play-button">Jouer</button>
-            </form>
-            {{end}}
-
-            <form action="/reset" method="post" class="reset-form">
-                <button type="submit" class="reset-button">Recommencer</button>
-            </form>
-        </footer>
-    </div>
+  {{ if .Winner }}
+    <div class="toast success">Bravo ! Partie terminee.</div>
+  {{ else if .Draw }}
+    <div class="toast">Match nul. Essayez une autre strategie.</div>
+  {{ end }}
+  <script src="/static/game.js"></script>
 </body>
 </html>
