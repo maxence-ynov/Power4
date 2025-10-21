@@ -37,7 +37,7 @@
 
   <section class="board-wrap card-lg">
     <form action="/play" method="post" novalidate>
-      <div class="board" style="grid-template-columns: repeat({{.Columns}}, 1fr);">
+      <div class="board" data-columns="{{.Columns}}">
         {{range $col := seq 0 (sub $.Columns 1)}}
           <button class="col" type="submit" name="column" value="{{$col}}" aria-label="Jouer dans la colonne {{$col}}">
             <span class="hover-indicator">&darr;</span>

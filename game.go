@@ -111,21 +111,31 @@ func (g *Game) applyGravity(lastCol, lastRow int, gravityInverse bool) int {
 	}
 
 	for c := 0; c < g.Columns; c++ {
-		stack := make([]cell, 0, g.Rows)
+		column := make([]cell, 0, g.Rows)
 		for r := 0; r < g.Rows; r++ {
 			if g.Board[c][r] != 0 {
-				stack = append(stack, cell{value: g.Board[c][r], row: r})
-				g.Board[c][r] = 0
+				column = append(column, cell{value: g.Board[c][r], row: r})
 			}
+			g.Board[c][r] = 0
 		}
 
-		for i, entry := range stack {
-			var newRow int
-			if gravityInverse {
-				newRow = i
-			} else {
-				newRow = g.Rows - 1 - i
+		if len(column) == 0 {
+			continue
+		}
+
+		if gravityInverse {
+			for i, entry := range column {
+				g.Board[c][i] = entry.value
+				if c == lastCol && entry.row == lastRow {
+					lastRow = i
+				}
 			}
+			continue
+		}
+
+		startRow := g.Rows - len(column)
+		for i, entry := range column {
+			newRow := startRow + i
 			g.Board[c][newRow] = entry.value
 			if c == lastCol && entry.row == lastRow {
 				lastRow = newRow

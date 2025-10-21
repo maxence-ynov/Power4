@@ -5,7 +5,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const board = document.querySelector(".board");
 
-  // Sauvegarde du plateau initial
+  const columnCount = board.dataset.columns || "7";
+  board.style.setProperty("--column-count", columnCount);
+  board.style.gridTemplateColumns = `repeat(${columnCount}, 1fr)`;
+
   let currentBoardState = captureBoardState();
 
   attachColumnListeners();
@@ -54,6 +57,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Met à jour le plateau après animation
     setTimeout(() => {
+      const newColumnCount = newBoard.dataset.columns || board.dataset.columns || "7";
+      board.dataset.columns = newColumnCount;
+      board.style.gridTemplateColumns = `repeat(${newColumnCount}, 1fr)`;
       board.innerHTML = newBoard.innerHTML;
       currentBoardState = newState;
       attachColumnListeners();

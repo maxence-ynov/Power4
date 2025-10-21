@@ -196,7 +196,10 @@ h1{
 /* Columns container = CSS grid.
    The number of columns is set inline in HTML with grid-template-columns. */
 .board{
-  display: grid; gap: 12px; justify-content: center;
+  display: grid;
+  gap: 12px;
+  justify-content: center;
+  grid-template-columns: repeat(7, 1fr);
 }
 
 /* Each column is a button to submit the move */
