@@ -13,7 +13,6 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/start", http.StatusSeeOther)
 		return
 	}
-
 	tmpl := template.Must(template.New("index.html").
 		Funcs(template.FuncMap{
 			"seq": func(start, end int) []int {
@@ -27,8 +26,19 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 			"sub": func(a, b int) int { return a - b },
 		}).
 		ParseFiles("templates/index.html"))
-
-	if err := tmpl.Execute(w, game); err != nil {
+	data := struct {
+		*Game
+		LastGravityUsed string
+	}{
+		Game: game,
+		LastGravityUsed: func() string {
+			if game.LastGravityUsed {
+				return "up"
+			}
+			return "down"
+		}(),
+	}
+	if err := tmpl.Execute(w, data); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }

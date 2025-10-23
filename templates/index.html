@@ -17,19 +17,62 @@
                 {{else if .Draw}}
                     <h2 class="draw">Match nul !</h2>
                 {{else}}
+<<<<<<< HEAD
                     <h2 class="turn-indicator">Tour de {{if eq .Turn 1}}{{.Player1Name}}{{else}}{{.Player2Name}}{{end}}</h2>
+=======
+                    <p class="status-label subtle">C'est au tour de</p>
+                    <p class="status-player {{if eq .Turn 1}}status-player--p1{{else}}status-player--p2{{end}}">
+                        {{if eq .Turn 1}}{{.Player1Name}}{{else}}{{.Player2Name}}{{end}}
+                    </p>
+                    <div class="status-versus" aria-hidden="true">
+                        <span class="status-badge status-badge--p1">
+                            <span class="status-dot"></span>{{.Player1Name}}
+                        </span>
+                        <span class="status-separator">vs</span>
+                        <span class="status-badge status-badge--p2">
+                            <span class="status-dot"></span>{{.Player2Name}}
+                        </span>
+                    </div>
+                    <p class="status-meta subtle">
+                        Niveau&nbsp;: <strong>{{.Level}}</strong> &bull;
+                        Gravit&eacute;&nbsp;: <strong>{{if .GravityInverse}}Inverse{{else}}Normale{{end}}</strong>
+                    </p>
+>>>>>>> parent of c08ddac (bonjour)
                 {{end}}
                 <p class="level-info">Niveau : <span>{{.Level}}</span></p>
                 
             </div>
         </header>
 
+<<<<<<< HEAD
         <main>
             <div class="game-board">
                 {{range $colIndex, $column := .Board}}
                     <div class="column">
                         {{range $rowIndex, $cell := $column}}
                             <div class="cell {{if eq $cell 1}}player1{{else if eq $cell 2}}player2{{end}}"></div>
+=======
+        <main class="game-main">
+            <form action="/play" method="post" novalidate class="board-form">
+                <div class="board-surface">
+                    <div class="board-grid{{if or .Winner .Draw}} board-grid--disabled{{end}}" data-columns="{{.Columns}}" style="--column-count: {{.Columns}};">
+                        {{range $col := seq 0 (sub $.Columns 1)}}
+                            <button
+                                class="board-column{{if or $.Winner $.Draw}} board-column--disabled{{end}}"
+                                type="submit"
+                                name="column"
+                                value="{{$col}}"
+                                {{if or $.Winner $.Draw}}disabled{{end}}
+                                aria-label="Jouer dans la colonne {{$col}}">
+                                <span class="hover-indicator" aria-hidden="true">&#128071;</span>
+                                <div class="column-stack" style="--row-count: {{$.Rows}};">
+                                    {{range $row := seq 0 (sub $.Rows 1)}}
+                                        {{ $cell := index (index $.Board $col) $row }}
+                                        <div class="cell {{if eq $cell 1}}player1{{else if eq $cell 2}}player2{{end}}"></div>
+                                    {{end}}
+                                </div>
+                            </button>
+>>>>>>> parent of c08ddac (bonjour)
                         {{end}}
                     </div>
                 {{end}}

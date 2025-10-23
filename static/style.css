@@ -198,12 +198,312 @@ button:hover {
     background-color: #27ae60;
 }
 
+<<<<<<< HEAD
 /* Footer */
 footer {
     display: flex;
     flex-direction: column;
     align-items: center;
     margin-top: 20px;
+=======
+.btn-destructive {
+  background: var(--destructive);
+  color: var(--foreground);
+  box-shadow: 0 12px 32px -12px hsla(0, 84%, 60%, 0.55);
+}
+
+.btn-destructive:hover:not(:disabled) {
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 18px 42px -14px hsla(0, 84%, 60%, 0.6);
+}
+
+/* Game layout */
+.game-layout {
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  padding: clamp(1.5rem, 4vw, 3rem);
+}
+
+.game-header {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1rem, 3vw, 1.75rem);
+  align-items: center;
+}
+
+.game-title {
+  margin: 0;
+  font-size: clamp(2.75rem, 8vw, 4rem);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  text-align: center;
+  text-shadow: 0 10px 45px hsla(262, 83%, 58%, 0.35);
+}
+
+.status-card {
+  width: min(100%, 38rem);
+  padding: clamp(1.75rem, 4vw, 2.25rem);
+  display: grid;
+  gap: 0.75rem;
+  text-align: center;
+}
+
+.status-label {
+  font-size: 0.95rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.status-message {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  justify-content: center;
+  font-size: clamp(1.4rem, 3vw, 1.75rem);
+  font-weight: 600;
+}
+
+.status-emoji {
+  font-size: clamp(1.4rem, 3vw, 1.8rem);
+}
+
+.status-player {
+  margin: 0;
+  font-size: clamp(1.4rem, 3vw, 1.75rem);
+  font-weight: 700;
+}
+
+.status-player--p1 {
+  color: var(--player1);
+  text-shadow: var(--shadow-glow-p1);
+}
+
+.status-player--p2 {
+  color: var(--player2);
+  text-shadow: var(--shadow-glow-p2);
+}
+
+.status-versus {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 0.75rem;
+  font-size: 0.95rem;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.9rem;
+  border-radius: 999px;
+  background: hsla(217, 33%, 20%, 0.65);
+  border: 1px solid hsla(217, 33%, 40%, 0.25);
+  font-weight: 500;
+}
+
+.status-badge--p1 .status-dot {
+  background: var(--player1);
+  box-shadow: var(--shadow-glow-p1);
+}
+
+.status-badge--p2 .status-dot {
+  background: var(--player2);
+  box-shadow: var(--shadow-glow-p2);
+}
+
+.status-dot {
+  width: 0.9rem;
+  height: 0.9rem;
+  border-radius: 50%;
+}
+
+.status-separator {
+  font-weight: 700;
+  color: var(--muted-foreground);
+  letter-spacing: 0.05em;
+}
+
+.status-meta {
+  margin: 0.3rem 0 0;
+  font-size: 0.95rem;
+}
+
+.game-main {
+  display: grid;
+  gap: 2rem;
+  justify-items: center;
+}
+
+.board-form {
+  width: min(100%, 64rem);
+}
+
+.board-surface {
+  background: var(--gradient-board);
+  border-radius: clamp(1.25rem, 3vw, 1.75rem);
+  padding: clamp(1.25rem, 3vw, 1.75rem);
+  box-shadow: var(--shadow-elevated);
+  border: 1px solid hsla(217, 33%, 45%, 0.25);
+}
+
+.board-grid {
+  display: grid;
+  gap: clamp(0.75rem, 2vw, 1.1rem);
+  grid-template-columns: repeat(var(--column-count, 7), 1fr);
+}
+
+.board-grid--disabled {
+  opacity: 0.65;
+  pointer-events: none;
+}
+
+.board-column {
+  position: relative;
+  background: transparent;
+  border: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.board-column--disabled {
+  cursor: not-allowed;
+}
+
+.board-column:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 0.2rem;
+}
+
+.hover-indicator {
+  position: absolute;
+  top: clamp(-2.75rem, -8vw, -2.35rem);
+  left: 50%;
+  transform: translate(-50%, -6px);
+  font-size: clamp(1.35rem, 2.5vw, 1.6rem);
+  opacity: 0;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  filter: drop-shadow(0 4px 10px hsla(0, 0%, 0%, 0.45));
+  pointer-events: none;
+}
+
+.board-column:hover .hover-indicator {
+  opacity: 1;
+  transform: translate(-50%, -14px);
+}
+
+.column-stack {
+  display: grid;
+  gap: clamp(0.65rem, 2vw, 0.9rem);
+  grid-auto-rows: clamp(3.25rem, 8vw, 4rem);
+  justify-items: center;
+}
+
+.cell {
+  width: clamp(3.25rem, 8vw, 4rem);
+  height: clamp(3.25rem, 8vw, 4rem);
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 25%, hsla(220, 20%, 38%, 0.6) 0%, var(--cell-empty) 55%, hsl(220, 22%, 15%) 100%);
+  box-shadow:
+    inset 14px 16px 20px hsla(0, 0%, 0%, 0.5),
+    inset -14px -16px 20px hsla(0, 0%, 100%, 0.05);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border 0.3s ease;
+}
+
+.cell.player1,
+.cell.player2 {
+  transform: scale(0.97);
+  animation: drop 0.65s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.cell.player1 {
+  background: radial-gradient(circle at 35% 25%, hsl(346, 87%, 72%) 0%, var(--player1) 55%, hsl(346, 87%, 40%) 100%);
+  box-shadow:
+    var(--shadow-glow-p1),
+    inset 12px 14px 18px hsla(0, 0%, 0%, 0.45),
+    inset -12px -12px 14px hsla(0, 0%, 100%, 0.12);
+}
+
+.cell.player2 {
+  background: radial-gradient(circle at 35% 25%, hsl(48, 96%, 72%) 0%, var(--player2) 55%, hsl(48, 96%, 35%) 100%);
+  box-shadow:
+    var(--shadow-glow-p2),
+    inset 12px 14px 18px hsla(0, 0%, 0%, 0.45),
+    inset -12px -12px 14px hsla(0, 0%, 100%, 0.12);
+}
+
+.cell.player1::after,
+.cell.player2::after {
+  content: "";
+  position: absolute;
+  inset: 22% 24% 46% 24%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 20%, hsla(0, 0%, 100%, 0.9) 0%, transparent 70%);
+  opacity: 0.85;
+}
+
+.cell.last {
+  border: 4px solid var(--ring);
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.cell.drop-in {
+  animation: drop 0.65s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.legend {
+  display: inline-flex;
+  gap: 1.25rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.25rem;
+  background: hsla(217, 33%, 18%, 0.6);
+  border-radius: 999px;
+  border: 1px solid hsla(217, 33%, 40%, 0.25);
+  box-shadow: 0 8px 24px -12px hsla(0, 0%, 0%, 0.35);
+}
+
+.legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+}
+
+.legend-dot {
+  width: 0.85rem;
+  height: 0.85rem;
+  border-radius: 50%;
+}
+
+.legend-dot--p1 {
+  background: var(--player1);
+  box-shadow: var(--shadow-glow-p1);
+}
+
+.legend-dot--p2 {
+  background: var(--player2);
+  box-shadow: var(--shadow-glow-p2);
+}
+
+.game-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.game-actions .btn {
+  min-width: 11rem;
+>>>>>>> parent of c08ddac (bonjour)
 }
 
 /* Responsive */
@@ -212,8 +512,105 @@ footer {
         padding: 10px;
     }
 
+<<<<<<< HEAD
     .cell {
         width: 40px;
         height: 40px;
     }
+=======
+  .board-grid {
+    gap: 0.75rem;
+  }
+
+  .column-stack {
+    gap: 0.75rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .start-card {
+    padding: 2rem;
+  }
+
+  .game-layout {
+    padding: 2rem 1.25rem;
+  }
+
+  .board-surface {
+    padding: 1.25rem;
+  }
+
+  .game-actions .btn {
+    min-width: 100%;
+  }
+
+  .legend {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .start-card {
+    padding: 1.75rem;
+  }
+
+  .game-title {
+    font-size: 2.75rem;
+  }
+
+  .status-versus {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Animations */
+@keyframes drop {
+  0% {
+    transform: translateY(-500px) scale(0.9);
+    opacity: 0;
+  }
+  60% {
+    transform: translateY(10px) scale(1);
+    opacity: 1;
+  }
+  80% {
+    transform: translateY(-5px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow:
+      0 0 0 4px var(--ring),
+      0 0 30px hsla(262, 83%, 58%, 0.6);
+  }
+  50% {
+    box-shadow:
+      0 0 0 6px var(--ring),
+      0 0 50px hsla(262, 83%, 58%, 0.85);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+>>>>>>> parent of c08ddac (bonjour)
 }

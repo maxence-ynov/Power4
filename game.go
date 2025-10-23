@@ -51,16 +51,19 @@ func (g *Game) Play(col int) {
 		return
 	}
 
+<<<<<<< HEAD
 	if g.TurnCount%5 == 0 {
 		g.GravityInverse = !g.GravityInverse
 	}
 	g.TurnCount++
 
 	var row int
+=======
+	row := -1
+>>>>>>> parent of c08ddac (bonjour)
 	if g.GravityInverse {
 		for r := 0; r < g.Rows; r++ {
 			if g.Board[col][r] == 0 {
-				g.Board[col][r] = g.Turn
 				row = r
 				break
 			}
@@ -68,20 +71,98 @@ func (g *Game) Play(col int) {
 	} else {
 		for r := g.Rows - 1; r >= 0; r-- {
 			if g.Board[col][r] == 0 {
-				g.Board[col][r] = g.Turn
 				row = r
 				break
 			}
 		}
 	}
 
+<<<<<<< HEAD
 	if g.checkWin(col, row) {
 		g.Winner = g.Turn
 	} else if g.checkDraw() {
+=======
+	if row == -1 {
+		return
+	}
+
+	g.Board[col][row] = g.Turn
+	g.TurnCount++
+
+	row = g.applyGravity(col, row, g.GravityInverse)
+
+	var gravityToggled bool
+	if g.TurnCount%5 == 0 {
+		g.GravityInverse = !g.GravityInverse
+		row = g.applyGravity(col, row, g.GravityInverse)
+		gravityToggled = true
+	}
+
+	if g.checkWin(col, row) {
+		g.Winner = g.Turn
+		return
+	}
+
+	if gravityToggled {
+		if winner := g.scanForWinner(); winner != 0 {
+			g.Winner = winner
+			return
+		}
+	}
+
+	if g.checkDraw() {
+>>>>>>> parent of c08ddac (bonjour)
 		g.Draw = true
 	} else {
 		g.Turn = 3 - g.Turn
 	}
+<<<<<<< HEAD
+=======
+
+	g.Turn = 3 - g.Turn
+}
+
+func (g *Game) applyGravity(lastCol, lastRow int, gravityInverse bool) int {
+	type cell struct {
+		value int
+		row   int
+	}
+
+	for c := 0; c < g.Columns; c++ {
+		column := make([]cell, 0, g.Rows)
+		for r := 0; r < g.Rows; r++ {
+			if g.Board[c][r] != 0 {
+				column = append(column, cell{value: g.Board[c][r], row: r})
+			}
+			g.Board[c][r] = 0
+		}
+
+		if len(column) == 0 {
+			continue
+		}
+
+		if gravityInverse {
+			for i, entry := range column {
+				g.Board[c][i] = entry.value
+				if c == lastCol && entry.row == lastRow {
+					lastRow = i
+				}
+			}
+			continue
+		}
+
+		startRow := g.Rows - len(column)
+		for i, entry := range column {
+			newRow := startRow + i
+			g.Board[c][newRow] = entry.value
+			if c == lastCol && entry.row == lastRow {
+				lastRow = newRow
+			}
+		}
+	}
+
+	return lastRow
+>>>>>>> parent of c08ddac (bonjour)
 }
 
 func (g *Game) checkWin(col, row int) bool {
