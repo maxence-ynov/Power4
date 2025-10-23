@@ -3,91 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Power 4 - {{if .Winner}}Victoire{{else if .Draw}}Match nul{{else}}En cours{{end}}</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <title>Power 4 - {{if .Winner}}Victory!{{else if .Draw}}Draw!{{else}}Game{{end}}</title>
     <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
-<body class="app-background">
-    <div class="game-layout">
-        <header class="game-header">
-            <h1 class="game-title animate-float">Power 4</h1>
-            <section class="status-card glass-card">
+<body>
+    <div class="container">
+        <header>
+            <h1>Power 4</h1>
+            <div class="game-info">
                 {{if .Winner}}
-                    <p class="status-label subtle">Partie termin&eacute;e</p>
-                    <p class="status-message">
-                        <span class="status-emoji" aria-hidden="true">&#127881;</span>
-                        <span>Victoire&nbsp;!</span>
-                    </p>
-                    <p class="status-player {{if eq .Winner 1}}status-player--p1{{else}}status-player--p2{{end}}">
-                        {{if eq .Winner 1}}{{.Player1Name}}{{else}}{{.Player2Name}}{{end}}
-                    </p>
+                    <h2 class="victory">{{.Player1Name}} vs {{.Player2Name}} → <span>Player {{.Winner}} wins!</span></h2>
                 {{else if .Draw}}
-                    <p class="status-label subtle">Partie termin&eacute;e</p>
-                    <p class="status-message">
-                        <span class="status-emoji" aria-hidden="true">&#129335;</span>
-                        <span>Match nul</span>
-                    </p>
+                    <h2 class="draw">Match nul !</h2>
                 {{else}}
-                    <p class="status-label subtle">C'est au tour de</p>
-                    <p class="status-player {{if eq .Turn 1}}status-player--p1{{else}}status-player--p2{{end}}">
-                        {{if eq .Turn 1}}{{.Player1Name}}{{else}}{{.Player2Name}}{{end}}
-                    </p>
-                    <div class="status-versus" aria-hidden="true">
-                        <span class="status-badge status-badge--p1">
-                            <span class="status-dot"></span>{{.Player1Name}}
-                        </span>
-                        <span class="status-separator">vs</span>
-                        <span class="status-badge status-badge--p2">
-                            <span class="status-dot"></span>{{.Player2Name}}
-                        </span>
-                    </div>
-                    <p class="status-meta subtle">
-                        Niveau&nbsp;: <strong>{{.Level}}</strong> &bull;
-                        Gravit&eacute;&nbsp;: <strong>{{if .GravityInverse}}Inverse{{else}}Normale{{end}}</strong>
-                    </p>
+                    <h2 class="turn-indicator">Tour de {{if eq .Turn 1}}{{.Player1Name}}{{else}}{{.Player2Name}}{{end}}</h2>
                 {{end}}
-            </section>
+                <p class="level-info">Niveau : <span>{{.Level}}</span></p>
+                
+            </div>
         </header>
 
-        <main class="game-main">
-            <form action="/play" method="post" novalidate class="board-form">
-                <div class="board-surface">
-                    <div class="board-grid{{if or .Winner .Draw}} board-grid--disabled{{end}}" data-columns="{{.Columns}}" style="--column-count: {{.Columns}};">
-                        {{range $col := seq 0 (sub $.Columns 1)}}
-                            <button
-                                class="board-column{{if or $.Winner $.Draw}} board-column--disabled{{end}}"
-                                type="submit"
-                                name="column"
-                                value="{{$col}}"
-                                {{if or $.Winner $.Draw}}disabled{{end}}
-                                aria-label="Jouer dans la colonne {{$col}}">
-                                <span class="hover-indicator" aria-hidden="true">&#128071;</span>
-                                <div class="column-stack" style="--row-count: {{$.Rows}};">
-                                    {{range $row := seq 0 (sub $.Rows 1)}}
-                                        {{ $cell := index (index $.Board $col) $row }}
-                                        <div class="cell {{if eq $cell 1}}player1{{else if eq $cell 2}}player2{{end}}"></div>
-                                    {{end}}
-                                </div>
-                            </button>
+        <main>
+            <div class="game-board">
+                {{range $colIndex, $column := .Board}}
+                    <div class="column">
+                        {{range $rowIndex, $cell := $column}}
+                            <div class="cell {{if eq $cell 1}}player1{{else if eq $cell 2}}player2{{end}}"></div>
                         {{end}}
                     </div>
-                </div>
-            </form>
-            <ul class="legend">
-                <li><span class="legend-dot legend-dot--p1"></span>{{.Player1Name}}</li>
-                <li><span class="legend-dot legend-dot--p2"></span>{{.Player2Name}}</li>
-            </ul>
+                {{end}}
+            </div>
         </main>
 
-        <footer class="game-actions">
-            <form action="/reset" method="post">
-                <button type="submit" class="btn btn-destructive btn-large">Recommencer</button>
+        <footer>
+            {{if not (or .Winner .Draw) }}
+            <form action="/play" method="post" class="play-form">
+                <label for="column">Choisir une colonne :</label>
+                <select name="column" id="column" class="column-select">
+                    {{range seq 0 (sub .Columns 1)}}
+                        <option value="{{.}}">{{.}}</option>
+                    {{end}}
+                </select>
+                <button type="submit" class="play-button">Jouer</button>
             </form>
-            <a class="btn btn-secondary btn-large" href="/start">Menu</a>
+            {{end}}
+
+            <form action="/reset" method="post" class="reset-form">
+                <button type="submit" class="reset-button">Recommencer</button>
+            </form>
         </footer>
     </div>
-    <script src="/static/game.js" defer></script>
 </body>
 </html>

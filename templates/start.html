@@ -3,43 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Power 4 - D&eacute;marrage</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <title>Power 4 - Démarrage</title>
     <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
-<body class="app-background">
-    <div class="start-screen">
-        <div class="start-card glass-card">
-            <header class="start-header">
-                <h1 class="start-title animate-float">&#127918; Power 4</h1>
-                <p class="start-subtitle">Configurez votre duel strat&eacute;gique et plongez dans l'action.</p>
-            </header>
-            <main>
-                <form action="/start-game" method="post" class="start-form" novalidate>
-                    <div class="form-group">
-                        <label for="player1">Nom du joueur 1</label>
-                        <input type="text" id="player1" name="player1" placeholder="Ex&nbsp;: Alice" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="player2">Nom du joueur 2</label>
-                        <input type="text" id="player2" name="player2" placeholder="Ex&nbsp;: Bob" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="level">Niveau de la grille</label>
-                        <div class="select-wrapper">
-                            <select id="level" name="level" required>
-                                <option value="easy">Facile (6x7)</option>
-                                <option value="normal" selected>Normal (6x9)</option>
-                                <option value="hard">Difficile (7x8)</option>
-                            </select>
-                        </div>
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-large">Commencer la partie</button>
-                </form>
-            </main>
-        </div>
+<body>
+    <div class="container">
+        <header>
+            <h1>Power 4</h1>
+            <p class="subtitle">Bienvenue ! Configurez votre partie.</p>
+        </header>
+
+        <main>
+            <form action="/start-game" method="post" class="start-form">
+                <div class="form-group">
+                    <label for="player1">Nom du Joueur 1 :</label>
+                    <input type="text" id="player1" name="player1" placeholder="Ex: Alice" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="player2">Nom du Joueur 2 :</label>
+                    <input type="text" id="player2" name="player2" placeholder="Ex: Bob" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="level">Niveau de difficulté :</label>
+                    <select id="level" name="level" required>
+                        <option value="easy">Facile (6x7)</option>
+                        <option value="normal" selected>Normal (6x9)</option>
+                        <option value="hard">Difficile (7x8)</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="start-button">Commencer la partie</button>
+            </form>
+        </main>
     </div>
 </body>
 </html>
