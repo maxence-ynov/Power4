@@ -45,7 +45,7 @@
                     </div>
                     <p class="status-meta subtle">
                         Niveau&nbsp;: <strong>{{.Level}}</strong> &bull;
-                        Gravit&eacute;&nbsp;: <strong>{{if .GravityInverse}}Inverse{{else}}Normale{{end}}</strong>
+                        Gravit&eacute;&nbsp;: <strong>{{if .GravityUp}}Inverse{{else}}Normale{{end}}</strong>
                     </p>
                 {{end}}
             </section>
@@ -54,7 +54,16 @@
         <main class="game-main">
             <form action="/play" method="post" novalidate class="board-form">
                 <div class="board-surface">
-                    <div class="board-grid{{if or .Winner .Draw}} board-grid--disabled{{end}}" data-columns="{{.Columns}}" style="--column-count: {{.Columns}};">
+                    <!-- Gravity flag shared with frontend animations -->
+                    <div
+                        class="board-grid {{if .GravityUp}}gravity-up{{else}}gravity-down{{end}}{{if or .Winner .Draw}} board-grid--disabled{{end}}"
+                        data-columns="{{.Columns}}"
+                        data-gravity="{{if .GravityUp}}up{{else}}down{{end}}"
+                        data-last-gravity-used="{{if .LastGravityUsed}}up{{else}}down{{end}}"
+                        data-last-col="{{.LastCol}}"
+                        data-last-row="{{.LastRow}}"
+                        style="--column-count: {{.Columns}};"
+                    >
                         {{range $col := seq 0 (sub $.Columns 1)}}
                             <button
                                 class="board-column{{if or $.Winner $.Draw}} board-column--disabled{{end}}"
